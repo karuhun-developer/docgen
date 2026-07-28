@@ -2,12 +2,13 @@ import { forwardRef, useEffect, useRef, useState } from 'react'
 import type { DocumentData } from '../types'
 import { TEMPLATE_COMPONENTS } from '../templates'
 
+// A4 width in px at 96dpi ≈ 794px. We scale the fixed-size doc to fit the pane.
+const A4_WIDTH_PX = 794
+const A4_HEIGHT_PX = 1123
+
 interface Props {
   data: DocumentData
 }
-
-// A4 width in px at 96dpi ≈ 794px. We scale the fixed-size doc to fit the pane.
-const A4_WIDTH_PX = 794
 
 const PreviewPane = forwardRef<HTMLDivElement, Props>(function PreviewPane(
   { data },
@@ -30,12 +31,11 @@ const PreviewPane = forwardRef<HTMLDivElement, Props>(function PreviewPane(
 
   return (
     <div ref={wrapRef} className="w-full">
-      {/* Scaled preview wrapper — height compensates for transform scale */}
+      {/* On-screen preview — scaled with CSS transform (visual only, never printed/captured) */}
       <div
-        style={{
-          height: scale < 1 ? `${1123 * scale}px` : undefined,
-        }}
-        className="mx-auto"
+        className="no-print mx-auto overflow-hidden"
+        style={{ height: `${A4_HEIGHT_PX * scale}px`, width: A4_WIDTH_PX * scale }}
+        aria-hidden
       >
         <div
           style={{
@@ -44,11 +44,18 @@ const PreviewPane = forwardRef<HTMLDivElement, Props>(function PreviewPane(
             width: A4_WIDTH_PX,
           }}
         >
-          {/* #print-root is targeted by print CSS to isolate the document */}
-          <div id="print-root" ref={ref}>
-            <Template data={data} />
-          </div>
+          <Template data={data} />
         </div>
+      </div>
+
+      {/*
+        Full-size, un-transformed source used for PRINT and html2canvas export.
+        Kept at real A4 dimensions and painted behind the app (z-index below the
+        opaque page background) so it's invisible on screen but fully rendered —
+        html2canvas needs real geometry, and print CSS reveals it.
+      */}
+      <div id="print-root" ref={ref} className="print-source">
+        <Template data={data} />
       </div>
     </div>
   )

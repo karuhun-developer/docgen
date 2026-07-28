@@ -37,6 +37,24 @@
   color: #0f172a;
 }
 
+/*
+  Full-size, un-transformed render used for printing + html2canvas export.
+  Painted at the top-left but sent behind the (opaque) app background via a
+  negative z-index, so it's invisible on screen yet fully rendered.
+*/
+.print-source {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 210mm;
+  z-index: -1;
+  background: #ffffff;
+  pointer-events: none;
+}
+.print-source .doc-page {
+  box-shadow: none !important;
+}
+
 /* Numeric inputs: hide spinners for a cleaner look */
 input[type='number']::-webkit-outer-spin-button,
 input[type='number']::-webkit-inner-spin-button {
@@ -63,6 +81,10 @@ input[type='number'] {
   html, body {
     background: #ffffff !important;
   }
+  .no-print {
+    display: none !important;
+  }
+  /* Hide the whole app, then reveal only the full-size document */
   body * {
     visibility: hidden;
   }
@@ -71,16 +93,14 @@ input[type='number'] {
     visibility: visible;
   }
   #print-root {
-    position: absolute;
-    left: 0;
-    top: 0;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    z-index: auto !important;
     width: 210mm;
   }
   #print-root .doc-page {
     box-shadow: none !important;
     margin: 0 !important;
-  }
-  .no-print {
-    display: none !important;
   }
 }

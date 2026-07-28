@@ -6,11 +6,21 @@ import { jsPDF } from 'jspdf'
  * Uses html2canvas to rasterize then places it on an A4 jsPDF page.
  */
 export async function downloadPdf(node: HTMLElement, filename: string) {
+  // The capture node is position:fixed at the top-left; scroll to the top so
+  // html2canvas computes its geometry correctly regardless of page scroll.
+  window.scrollTo(0, 0)
+
   const canvas = await html2canvas(node, {
     scale: 2,
     useCORS: true,
     backgroundColor: '#ffffff',
     logging: false,
+    scrollX: 0,
+    scrollY: 0,
+    windowWidth: node.scrollWidth,
+    windowHeight: node.scrollHeight,
+    width: node.scrollWidth,
+    height: node.scrollHeight,
   })
 
   const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' })
