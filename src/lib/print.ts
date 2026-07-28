@@ -44,6 +44,12 @@ ${headStyles}
 <style>
   @page { size: A4; margin: 0; }
   html, body { margin: 0; padding: 0; background: #ffffff; }
+  /* Force browsers to print background colors/images (navy header, green total
+     bar, etc.) instead of stripping them for ink-saving. */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
   .doc-page { box-shadow: none !important; margin: 0 !important; }
   /* Neutralize the app's copied @media print rules: the document lives directly
      in this iframe's body (no #print-root wrapper), so force it fully visible. */

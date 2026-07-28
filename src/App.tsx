@@ -62,9 +62,9 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex h-screen flex-col overflow-hidden bg-background">
       {/* Header */}
-      <header className="no-print sticky top-0 z-20 border-b border-border bg-white/90 backdrop-blur">
+      <header className="no-print z-20 flex-none border-b border-border bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="flex items-center gap-2.5">
             <div
@@ -134,30 +134,35 @@ export default function App() {
         </div>
       </header>
 
-      {/* Body */}
-      <main className="mx-auto grid max-w-[1400px] grid-cols-1 gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[minmax(380px,440px)_1fr]">
-        {/* Editor */}
-        <div className={`${tab === 'edit' ? 'block' : 'hidden'} lg:block`}>
+      {/* Body — two independently scrolling panels */}
+      <main className="mx-auto grid w-full min-h-0 max-w-[1400px] flex-1 grid-cols-1 gap-6 px-4 sm:px-6 lg:grid-rows-1 lg:grid-cols-[minmax(380px,440px)_1fr]">
+        {/* Editor (scrolls on its own) */}
+        <div
+          className={`${
+            tab === 'edit' ? 'block' : 'hidden'
+          } min-h-0 overflow-y-auto py-6 pr-1 lg:block`}
+        >
           <Editor data={data} update={update} />
+          <p className="no-print mt-6 text-center text-[11px] text-slate-400">
+            100% lokal — data tersimpan di browser Anda. Tidak ada data yang
+            dikirim ke server.
+          </p>
         </div>
 
-        {/* Preview */}
-        <div className={`${tab === 'preview' ? 'block' : 'hidden'} lg:block`}>
-          <div className="lg:sticky lg:top-[92px]">
-            <div className="mb-2 hidden items-center gap-1.5 text-xs font-semibold text-slate-400 lg:flex">
-              <Eye size={14} weight="bold" /> Pratinjau
-            </div>
-            <div className="overflow-hidden rounded-xl border border-border bg-slate-100 p-4 sm:p-6">
-              <PreviewPane ref={printRef} data={data} />
-            </div>
+        {/* Preview (scrolls on its own) */}
+        <div
+          className={`${
+            tab === 'preview' ? 'block' : 'hidden'
+          } min-h-0 overflow-y-auto py-6 lg:block`}
+        >
+          <div className="mb-2 hidden items-center gap-1.5 text-xs font-semibold text-slate-400 lg:flex">
+            <Eye size={14} weight="bold" /> Pratinjau
+          </div>
+          <div className="rounded-xl border border-border bg-slate-100 p-4 sm:p-6">
+            <PreviewPane ref={printRef} data={data} />
           </div>
         </div>
       </main>
-
-      <footer className="no-print pb-8 text-center text-[11px] text-slate-400">
-        100% lokal — data tersimpan di browser Anda. Tidak ada data yang dikirim
-        ke server.
-      </footer>
     </div>
   )
 }
