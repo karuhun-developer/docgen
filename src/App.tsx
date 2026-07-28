@@ -11,6 +11,7 @@ import type { DocumentData } from './types'
 import { DOC_TYPES } from './types'
 import { loadData, saveData, clearData, defaultData } from './lib/storage'
 import { downloadPdf } from './lib/pdf'
+import { printNode } from './lib/print'
 import Editor from './components/editor/Editor'
 import PreviewPane from './components/PreviewPane'
 
@@ -36,6 +37,11 @@ export default function App() {
       clearData()
       setData(defaultData())
     }
+  }
+
+  function handlePrint() {
+    const node = printRef.current
+    if (node) printNode(node)
   }
 
   async function handleDownload() {
@@ -100,7 +106,7 @@ export default function App() {
             </button>
             <button
               type="button"
-              onClick={() => window.print()}
+              onClick={handlePrint}
               className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold text-white transition-opacity duration-200 hover:opacity-90"
               style={{ background: '#059669' }}
             >

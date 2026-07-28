@@ -39,15 +39,14 @@
 
 /*
   Full-size, un-transformed render used for printing + html2canvas export.
-  Painted at the top-left but sent behind the (opaque) app background via a
-  negative z-index, so it's invisible on screen yet fully rendered.
+  Kept off-screen (fully painted, no transformed ancestor) so it's invisible on
+  screen but still capturable; print CSS + the export routine move it into view.
 */
 .print-source {
   position: fixed;
   top: 0;
-  left: 0;
+  left: -10000px;
   width: 210mm;
-  z-index: -1;
   background: #ffffff;
   pointer-events: none;
 }
@@ -93,11 +92,12 @@ input[type='number'] {
     visibility: visible;
   }
   #print-root {
-    position: absolute !important;
+    position: fixed !important;
     left: 0 !important;
     top: 0 !important;
-    z-index: auto !important;
+    z-index: 9999 !important;
     width: 210mm;
+    margin: 0 !important;
   }
   #print-root .doc-page {
     box-shadow: none !important;
