@@ -1,7 +1,12 @@
 # docgen — Generator Quotation, Invoice & Dokumen
 
-Aplikasi web **100% lokal** (tanpa backend, tanpa database) untuk membuat dokumen bisnis:
-Quotation, Invoice, Kwitansi, Surat Jalan, dan Purchase Order.
+Aplikasi web untuk membuat dokumen bisnis: Quotation, Invoice, Kwitansi, Surat Jalan,
+dan Purchase Order.
+
+- **Mode tamu (tanpa login):** 100% lokal — 1 dokumen tersimpan di `localStorage` browser.
+- **Login (opsional):** simpan banyak dokumen sebagai **draft**/**final** ke database dan
+  buka lagi kapan saja. Backend terpisah (Hono @ Vercel + Supabase) — lihat `server/README.md`.
+  Frontend cukup di-set env `VITE_API_URL` ke URL backend.
 
 ## Fitur
 - **5 jenis dokumen** — judul, label, & kolom menyesuaikan otomatis (Surat Jalan tanpa kolom harga).

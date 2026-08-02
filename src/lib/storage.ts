@@ -13,6 +13,7 @@ export function emptyItem(): LineItem {
 export function defaultData(): DocumentData {
   return {
     docType: 'invoice',
+    title: '',
     templateId: 'modern',
     docNumber: 'INV-001',
     date: '2026-07-28',

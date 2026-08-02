@@ -36,6 +36,8 @@ export interface Signature {
 
 export interface DocumentData {
   docType: DocType
+  /** User-facing document name for listings; empty => derived from type + client. */
+  title: string
   templateId: TemplateId
   docNumber: string
   date: string // yyyy-mm-dd
@@ -116,6 +118,40 @@ export const DOC_TYPES: Record<DocType, DocTypeConfig> = {
     dueDateLabel: 'Tgl. Dibutuhkan',
     numberPrefix: 'PO',
   },
+}
+
+// ---- Saved documents (backend, logged-in users only) ----
+
+export type DocStatus = 'draft' | 'final'
+
+/** Row metadata returned by GET /api/documents (list view). */
+export interface SavedDocumentMeta {
+  id: string
+  doc_type: DocType
+  doc_number: string | null
+  title: string | null
+  status: DocStatus
+  updated_at: string
+  created_at: string
+}
+
+/** Full row returned by GET /api/documents/:id. */
+export interface SavedDocument extends SavedDocumentMeta {
+  user_id: string
+  data: DocumentData
+}
+
+/** Reusable named DocumentData snapshot. */
+export interface SavedTemplateMeta {
+  id: string
+  name: string
+  updated_at: string
+  created_at: string
+}
+
+export interface SavedTemplate extends SavedTemplateMeta {
+  user_id: string
+  data: DocumentData
 }
 
 export const TEMPLATES: { id: TemplateId; name: string; desc: string }[] = [
