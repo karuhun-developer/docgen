@@ -1,15 +1,15 @@
-import { DOC_TYPES } from '../types'
-import { computeTotals, lineTotal } from '../lib/calc'
-import { formatDate, formatRupiah, terbilang } from '../lib/format'
-import { SignatureBlock, type TemplateProps } from './shared'
+import { DOC_TYPES } from "../types";
+import { computeTotals, lineTotal } from "../lib/calc";
+import { formatDate, formatRupiah, terbilang } from "../lib/format";
+import { SignatureBlock, type TemplateProps } from "./shared";
 
-const GREEN = '#059669'
+const GREEN = "#059669";
 
 // Minimal: clean, lots of whitespace, thin hairlines
 export default function MinimalTemplate({ data }: TemplateProps) {
-  const cfg = DOC_TYPES[data.docType]
-  const totals = computeTotals(data)
-  const showAmounts = cfg.showAmounts
+  const cfg = DOC_TYPES[data.docType];
+  const totals = computeTotals(data);
+  const showAmounts = cfg.showAmounts;
 
   return (
     <div className="doc-page flex flex-col px-14 py-14 font-body text-slate-800 shadow-card">
@@ -31,7 +31,9 @@ export default function MinimalTemplate({ data }: TemplateProps) {
           <div className="font-heading text-3xl font-semibold tracking-tight text-slate-900">
             {cfg.title}
           </div>
-          <div className="mt-1 text-[11px] text-slate-400">{data.docNumber}</div>
+          <div className="mt-1 text-[11px] text-slate-400">
+            {data.docNumber}
+          </div>
         </div>
       </header>
 
@@ -47,9 +49,9 @@ export default function MinimalTemplate({ data }: TemplateProps) {
             <span className="font-semibold text-slate-800">
               {data.company.name}
             </span>
-            {'\n'}
+            {"\n"}
             {data.company.address}
-            {data.company.phone ? `\n${data.company.phone}` : ''}
+            {data.company.phone ? `\n${data.company.phone}` : ""}
           </div>
         </div>
         <div>
@@ -60,7 +62,7 @@ export default function MinimalTemplate({ data }: TemplateProps) {
             <span className="font-semibold text-slate-800">
               {data.client.name}
             </span>
-            {'\n'}
+            {"\n"}
             {data.client.address}
           </div>
         </div>
@@ -94,7 +96,7 @@ export default function MinimalTemplate({ data }: TemplateProps) {
           {data.items.map((it) => (
             <tr key={it.id} className="border-b border-slate-100">
               <td className="py-3 font-medium text-slate-700">
-                {it.description || '-'}
+                {it.description || "-"}
               </td>
               <td className="py-3 text-center">{it.qty}</td>
               <td className="py-3 text-center text-slate-400">{it.unit}</td>
@@ -152,8 +154,12 @@ export default function MinimalTemplate({ data }: TemplateProps) {
       {/* Footer */}
       <div className="mt-auto flex items-end justify-between gap-8 pt-12">
         <div className="max-w-[300px] space-y-2 text-[11px] leading-relaxed text-slate-400">
-          {data.notes && <div className="whitespace-pre-line">{data.notes}</div>}
-          {data.terms && <div className="whitespace-pre-line">{data.terms}</div>}
+          {data.notes && (
+            <div className="whitespace-pre-line">{data.notes}</div>
+          )}
+          {data.terms && (
+            <div className="whitespace-pre-line">{data.terms}</div>
+          )}
         </div>
         <SignatureBlock
           signature={data.signature}
@@ -162,5 +168,5 @@ export default function MinimalTemplate({ data }: TemplateProps) {
         />
       </div>
     </div>
-  )
+  );
 }

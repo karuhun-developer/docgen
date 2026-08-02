@@ -1,38 +1,38 @@
-import { useRef } from 'react'
-import { UploadSimple, Trash } from '@phosphor-icons/react'
+import { useRef } from "react";
+import { UploadSimple, Trash } from "@phosphor-icons/react";
 
 function fileToDataURL(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(String(reader.result))
-    reader.onerror = reject
-    reader.readAsDataURL(file)
-  })
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 }
 
 interface Props {
-  value: string
-  onChange: (dataUrl: string) => void
-  label?: string
+  value: string;
+  onChange: (dataUrl: string) => void;
+  label?: string;
   /** height of the preview box */
-  previewClass?: string
-  hint?: string
+  previewClass?: string;
+  hint?: string;
 }
 
 export default function ImageUpload({
   value,
   onChange,
-  label = 'Unggah gambar',
-  previewClass = 'h-24',
+  label = "Unggah gambar",
+  previewClass = "h-24",
   hint,
 }: Props) {
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null);
 
   async function handleFile(file: File | undefined) {
-    if (!file) return
-    if (!file.type.startsWith('image/')) return
-    const url = await fileToDataURL(file)
-    onChange(url)
+    if (!file) return;
+    if (!file.type.startsWith("image/")) return;
+    const url = await fileToDataURL(file);
+    onChange(url);
   }
 
   return (
@@ -50,7 +50,7 @@ export default function ImageUpload({
           </div>
           <button
             type="button"
-            onClick={() => onChange('')}
+            onClick={() => onChange("")}
             className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-border px-2.5 py-1.5 text-xs font-medium text-destructive transition-colors duration-200 hover:bg-red-50"
           >
             <Trash size={14} weight="bold" /> Hapus
@@ -75,5 +75,5 @@ export default function ImageUpload({
         onChange={(e) => handleFile(e.target.files?.[0])}
       />
     </div>
-  )
+  );
 }

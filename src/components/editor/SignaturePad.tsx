@@ -1,92 +1,92 @@
-import { useEffect, useRef, useState } from 'react'
-import { PencilSimple, Eraser } from '@phosphor-icons/react'
-import type { Signature, SignatureMode } from '../../types'
-import { Field, Input } from '../ui'
-import ImageUpload from './ImageUpload'
+import { useEffect, useRef, useState } from "react";
+import { PencilSimple, Eraser } from "@phosphor-icons/react";
+import type { Signature, SignatureMode } from "../../types";
+import { Field, Input } from "../ui";
+import ImageUpload from "./ImageUpload";
 
 interface Props {
-  signature: Signature
-  onChange: (patch: Partial<Signature>) => void
+  signature: Signature;
+  onChange: (patch: Partial<Signature>) => void;
 }
 
 const MODES: { id: SignatureMode; label: string }[] = [
-  { id: 'draw', label: 'Gambar' },
-  { id: 'upload', label: 'Unggah' },
-  { id: 'text', label: 'Ketik Nama' },
-]
+  { id: "draw", label: "Gambar" },
+  { id: "upload", label: "Unggah" },
+  { id: "text", label: "Ketik Nama" },
+];
 
 function DrawCanvas({
   value,
   onChange,
 }: {
-  value: string
-  onChange: (dataUrl: string) => void
+  value: string;
+  onChange: (dataUrl: string) => void;
 }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const drawing = useRef(false)
-  const [hasInk, setHasInk] = useState(false)
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const drawing = useRef(false);
+  const [hasInk, setHasInk] = useState(false);
 
   // Restore an existing drawing onto the canvas when mounted
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-    ctx.lineWidth = 2.2
-    ctx.lineCap = 'round'
-    ctx.lineJoin = 'round'
-    ctx.strokeStyle = '#0f172a'
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.lineWidth = 2.2;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "#0f172a";
     if (value) {
-      const img = new Image()
-      img.onload = () => ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-      img.src = value
-      setHasInk(true)
+      const img = new Image();
+      img.onload = () => ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      img.src = value;
+      setHasInk(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   function pos(e: React.PointerEvent<HTMLCanvasElement>) {
-    const rect = e.currentTarget.getBoundingClientRect()
+    const rect = e.currentTarget.getBoundingClientRect();
     return {
       x: ((e.clientX - rect.left) / rect.width) * e.currentTarget.width,
       y: ((e.clientY - rect.top) / rect.height) * e.currentTarget.height,
-    }
+    };
   }
 
   function start(e: React.PointerEvent<HTMLCanvasElement>) {
-    const ctx = canvasRef.current?.getContext('2d')
-    if (!ctx) return
-    drawing.current = true
-    e.currentTarget.setPointerCapture(e.pointerId)
-    const { x, y } = pos(e)
-    ctx.beginPath()
-    ctx.moveTo(x, y)
+    const ctx = canvasRef.current?.getContext("2d");
+    if (!ctx) return;
+    drawing.current = true;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    const { x, y } = pos(e);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
   }
 
   function move(e: React.PointerEvent<HTMLCanvasElement>) {
-    if (!drawing.current) return
-    const ctx = canvasRef.current?.getContext('2d')
-    if (!ctx) return
-    const { x, y } = pos(e)
-    ctx.lineTo(x, y)
-    ctx.stroke()
-    setHasInk(true)
+    if (!drawing.current) return;
+    const ctx = canvasRef.current?.getContext("2d");
+    if (!ctx) return;
+    const { x, y } = pos(e);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    setHasInk(true);
   }
 
   function end() {
-    if (!drawing.current) return
-    drawing.current = false
-    const canvas = canvasRef.current
-    if (canvas) onChange(canvas.toDataURL('image/png'))
+    if (!drawing.current) return;
+    drawing.current = false;
+    const canvas = canvasRef.current;
+    if (canvas) onChange(canvas.toDataURL("image/png"));
   }
 
   function clear() {
-    const canvas = canvasRef.current
-    const ctx = canvas?.getContext('2d')
-    if (!canvas || !ctx) return
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    setHasInk(false)
-    onChange('')
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    setHasInk(false);
+    onChange("");
   }
 
   return (
@@ -97,7 +97,7 @@ function DrawCanvas({
           width={480}
           height={180}
           className="h-40 w-full touch-none"
-          style={{ cursor: 'crosshair' }}
+          style={{ cursor: "crosshair" }}
           onPointerDown={start}
           onPointerMove={move}
           onPointerUp={end}
@@ -117,7 +117,7 @@ function DrawCanvas({
         <Eraser size={14} weight="bold" /> Bersihkan
       </button>
     </div>
-  )
+  );
 }
 
 export default function SignaturePad({ signature, onChange }: Props) {
@@ -131,8 +131,8 @@ export default function SignaturePad({ signature, onChange }: Props) {
             onClick={() => onChange({ mode: m.id })}
             className={`cursor-pointer rounded-md px-3 py-1.5 text-xs font-medium transition-colors duration-200 ${
               signature.mode === m.id
-                ? 'bg-white text-primary shadow-sm'
-                : 'text-slate-500 hover:text-foreground'
+                ? "bg-white text-primary shadow-sm"
+                : "text-slate-500 hover:text-foreground"
             }`}
           >
             {m.label}
@@ -140,13 +140,13 @@ export default function SignaturePad({ signature, onChange }: Props) {
         ))}
       </div>
 
-      {signature.mode === 'draw' && (
+      {signature.mode === "draw" && (
         <DrawCanvas
           value={signature.value}
           onChange={(v) => onChange({ value: v })}
         />
       )}
-      {signature.mode === 'upload' && (
+      {signature.mode === "upload" && (
         <ImageUpload
           value={signature.value}
           onChange={(v) => onChange({ value: v })}
@@ -155,7 +155,7 @@ export default function SignaturePad({ signature, onChange }: Props) {
           previewClass="h-28"
         />
       )}
-      {signature.mode === 'text' && (
+      {signature.mode === "text" && (
         <p className="text-xs text-slate-400">
           Mode ketik: nama penandatangan di bawah akan ditampilkan sebagai tanda
           tangan.
@@ -179,5 +179,5 @@ export default function SignaturePad({ signature, onChange }: Props) {
         </Field>
       </div>
     </div>
-  )
+  );
 }

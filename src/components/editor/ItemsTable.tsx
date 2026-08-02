@@ -1,25 +1,25 @@
-import { Plus, Trash } from '@phosphor-icons/react'
-import type { LineItem } from '../../types'
-import { emptyItem } from '../../lib/storage'
-import { lineTotal } from '../../lib/calc'
-import { formatRupiah } from '../../lib/format'
-import { Input } from '../ui'
+import { Plus, Trash } from "@phosphor-icons/react";
+import type { LineItem } from "../../types";
+import { emptyItem } from "../../lib/storage";
+import { lineTotal } from "../../lib/calc";
+import { formatRupiah } from "../../lib/format";
+import { Input } from "../ui";
 
 interface Props {
-  items: LineItem[]
-  showAmounts: boolean
-  onChange: (items: LineItem[]) => void
+  items: LineItem[];
+  showAmounts: boolean;
+  onChange: (items: LineItem[]) => void;
 }
 
 export default function ItemsTable({ items, showAmounts, onChange }: Props) {
   function patchItem(id: string, patch: Partial<LineItem>) {
-    onChange(items.map((it) => (it.id === id ? { ...it, ...patch } : it)))
+    onChange(items.map((it) => (it.id === id ? { ...it, ...patch } : it)));
   }
   function removeItem(id: string) {
-    onChange(items.filter((it) => it.id !== id))
+    onChange(items.filter((it) => it.id !== id));
   }
   function addItem() {
-    onChange([...items, emptyItem()])
+    onChange([...items, emptyItem()]);
   }
 
   return (
@@ -94,7 +94,7 @@ export default function ItemsTable({ items, showAmounts, onChange }: Props) {
 
           {showAmounts && (
             <div className="mt-2 text-right text-xs text-slate-500">
-              Subtotal:{' '}
+              Subtotal:{" "}
               <span className="font-semibold text-foreground">
                 {formatRupiah(lineTotal(it))}
               </span>
@@ -111,5 +111,5 @@ export default function ItemsTable({ items, showAmounts, onChange }: Props) {
         <Plus size={16} weight="bold" /> Tambah Item
       </button>
     </div>
-  )
+  );
 }

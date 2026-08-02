@@ -5,36 +5,36 @@
  * libraries such as react-to-print).
  */
 export function printNode(node: HTMLElement) {
-  const iframe = document.createElement('iframe')
-  iframe.setAttribute('aria-hidden', 'true')
+  const iframe = document.createElement("iframe");
+  iframe.setAttribute("aria-hidden", "true");
   Object.assign(iframe.style, {
-    position: 'fixed',
-    right: '0',
-    bottom: '0',
-    width: '0',
-    height: '0',
-    border: '0',
-    visibility: 'hidden',
-  })
-  document.body.appendChild(iframe)
+    position: "fixed",
+    right: "0",
+    bottom: "0",
+    width: "0",
+    height: "0",
+    border: "0",
+    visibility: "hidden",
+  });
+  document.body.appendChild(iframe);
 
-  const cw = iframe.contentWindow
+  const cw = iframe.contentWindow;
   if (!cw) {
-    iframe.remove()
+    iframe.remove();
     // Fallback: print the whole page
-    window.print()
-    return
+    window.print();
+    return;
   }
-  const doc = cw.document
+  const doc = cw.document;
 
   // Copy the app's <style> and <link rel=stylesheet> so the document looks identical.
   const headStyles = Array.from(
     document.querySelectorAll('style, link[rel="stylesheet"]'),
   )
     .map((el) => el.outerHTML)
-    .join('\n')
+    .join("\n");
 
-  doc.open()
+  doc.open();
   doc.write(`<!doctype html>
 <html>
 <head>
@@ -60,31 +60,31 @@ ${headStyles}
 </style>
 </head>
 <body>${node.innerHTML}</body>
-</html>`)
-  doc.close()
+</html>`);
+  doc.close();
 
   const doPrint = () => {
     try {
-      cw.focus()
-      cw.print()
+      cw.focus();
+      cw.print();
     } finally {
-      setTimeout(() => iframe.remove(), 1500)
+      setTimeout(() => iframe.remove(), 1500);
     }
-  }
+  };
 
   const whenReady = () => {
     // Wait for fonts if the browser exposes the API, else use a small delay
-    const fonts = (doc as Document & { fonts?: FontFaceSet }).fonts
+    const fonts = (doc as Document & { fonts?: FontFaceSet }).fonts;
     if (fonts?.ready) {
-      fonts.ready.then(() => setTimeout(doPrint, 120)).catch(() => doPrint())
+      fonts.ready.then(() => setTimeout(doPrint, 120)).catch(() => doPrint());
     } else {
-      setTimeout(doPrint, 400)
+      setTimeout(doPrint, 400);
     }
-  }
+  };
 
-  if (doc.readyState === 'complete') {
-    setTimeout(whenReady, 60)
+  if (doc.readyState === "complete") {
+    setTimeout(whenReady, 60);
   } else {
-    iframe.onload = whenReady
+    iframe.onload = whenReady;
   }
 }

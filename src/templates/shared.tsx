@@ -1,39 +1,37 @@
-import type { DocumentData } from '../types'
-import { formatDate } from '../lib/format'
+import type { DocumentData } from "../types";
+import { formatDate } from "../lib/format";
 
 export interface TemplateProps {
-  data: DocumentData
+  data: DocumentData;
 }
 
 /** Renders the signature area (draw/upload image or typed name) */
 export function SignatureBlock({
   signature,
   date,
-  align = 'right',
-  accent = '#0f172a',
+  align = "right",
+  accent = "#0f172a",
 }: {
-  signature: DocumentData['signature']
-  date: string
-  align?: 'left' | 'right'
-  accent?: string
+  signature: DocumentData["signature"];
+  date: string;
+  align?: "left" | "right";
+  accent?: string;
 }) {
-  const place = signature.place || ''
-  const dateLine = [place, formatDate(date)].filter(Boolean).join(', ')
+  const place = signature.place || "";
+  const dateLine = [place, formatDate(date)].filter(Boolean).join(", ");
 
   return (
-    <div className={align === 'right' ? 'text-right' : 'text-left'}>
-      {dateLine && (
-        <div className="text-[11px] text-slate-500">{dateLine}</div>
-      )}
+    <div className={align === "right" ? "text-right" : "text-left"}>
+      {dateLine && <div className="text-[11px] text-slate-500">{dateLine}</div>}
       <div
         className={`mt-1 flex h-[70px] items-end ${
-          align === 'right' ? 'justify-end' : 'justify-start'
+          align === "right" ? "justify-end" : "justify-start"
         }`}
       >
-        {signature.mode === 'text' ? (
+        {signature.mode === "text" ? (
           <span
             className="pb-1 text-2xl"
-            style={{ fontFamily: 'Poppins, cursive', color: accent }}
+            style={{ fontFamily: "Poppins, cursive", color: accent }}
           >
             {signature.label}
           </span>
@@ -53,10 +51,10 @@ export function SignatureBlock({
         className="mt-1 border-t pt-1 text-[12px] font-semibold"
         style={{ borderColor: accent, color: accent }}
       >
-        {signature.label || ' '}
+        {signature.label || " "}
       </div>
     </div>
-  )
+  );
 }
 
 /** Two-line address/party block */
@@ -66,10 +64,10 @@ export function PartyBlock({
   phone,
   email,
 }: {
-  name: string
-  address?: string
-  phone?: string
-  email?: string
+  name: string;
+  address?: string;
+  phone?: string;
+  email?: string;
 }) {
   return (
     <div className="space-y-0.5 text-[12px] leading-snug text-slate-600">
@@ -78,5 +76,5 @@ export function PartyBlock({
       {phone && <div>{phone}</div>}
       {email && <div>{email}</div>}
     </div>
-  )
+  );
 }

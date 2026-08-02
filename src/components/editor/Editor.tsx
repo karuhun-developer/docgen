@@ -6,45 +6,48 @@ import {
   Signature as SignatureIcon,
   FileText,
   Palette,
-} from '@phosphor-icons/react'
-import type { DocType, DocumentData, Party, TemplateId } from '../../types'
-import { DOC_TYPES, TEMPLATES } from '../../types'
-import { computeTotals } from '../../lib/calc'
-import { formatRupiah } from '../../lib/format'
-import { Field, Input, Section, Select, TextArea } from '../ui'
-import ImageUpload from './ImageUpload'
-import ItemsTable from './ItemsTable'
-import SignaturePad from './SignaturePad'
+} from "@phosphor-icons/react";
+import type { DocType, DocumentData, Party, TemplateId } from "../../types";
+import { DOC_TYPES, TEMPLATES } from "../../types";
+import { computeTotals } from "../../lib/calc";
+import { formatRupiah } from "../../lib/format";
+import { Field, Input, Section, Select, TextArea } from "../ui";
+import ImageUpload from "./ImageUpload";
+import ItemsTable from "./ItemsTable";
+import SignaturePad from "./SignaturePad";
 
 interface Props {
-  data: DocumentData
-  update: (patch: Partial<DocumentData>) => void
+  data: DocumentData;
+  update: (patch: Partial<DocumentData>) => void;
 }
 
 export default function Editor({ data, update }: Props) {
-  const cfg = DOC_TYPES[data.docType]
-  const totals = computeTotals(data)
+  const cfg = DOC_TYPES[data.docType];
+  const totals = computeTotals(data);
 
-  function patchCompany(patch: Partial<DocumentData['company']>) {
-    update({ company: { ...data.company, ...patch } })
+  function patchCompany(patch: Partial<DocumentData["company"]>) {
+    update({ company: { ...data.company, ...patch } });
   }
   function patchClient(patch: Partial<Party>) {
-    update({ client: { ...data.client, ...patch } })
+    update({ client: { ...data.client, ...patch } });
   }
 
   return (
     <div className="space-y-4">
       {/* Document type + template */}
-      <Section title="Jenis Dokumen & Template" icon={<FileText size={16} weight="bold" />}>
+      <Section
+        title="Jenis Dokumen & Template"
+        icon={<FileText size={16} weight="bold" />}
+      >
         <Field label="Jenis Dokumen">
           <Select
             value={data.docType}
             onChange={(e) => {
-              const docType = e.target.value as DocType
+              const docType = e.target.value as DocType;
               update({
                 docType,
                 docNumber: `${DOC_TYPES[docType].numberPrefix}-001`,
-              })
+              });
             }}
           >
             {(Object.keys(DOC_TYPES) as DocType[]).map((k) => (
@@ -67,8 +70,8 @@ export default function Editor({ data, update }: Props) {
                 onClick={() => update({ templateId: t.id as TemplateId })}
                 className={`cursor-pointer rounded-lg border p-2.5 text-left transition-colors duration-200 ${
                   data.templateId === t.id
-                    ? 'border-primary bg-primary/5 ring-1 ring-primary'
-                    : 'border-border hover:border-primary/50'
+                    ? "border-primary bg-primary/5 ring-1 ring-primary"
+                    : "border-border hover:border-primary/50"
                 }`}
               >
                 <div className="text-sm font-semibold text-foreground">
@@ -84,7 +87,10 @@ export default function Editor({ data, update }: Props) {
       </Section>
 
       {/* Company */}
-      <Section title="Perusahaan Anda" icon={<Buildings size={16} weight="bold" />}>
+      <Section
+        title="Perusahaan Anda"
+        icon={<Buildings size={16} weight="bold" />}
+      >
         <Field label="Logo">
           <ImageUpload
             value={data.company.logo}
@@ -123,7 +129,10 @@ export default function Editor({ data, update }: Props) {
       </Section>
 
       {/* Recipient */}
-      <Section title={cfg.recipientLabel} icon={<UserFocus size={16} weight="bold" />}>
+      <Section
+        title={cfg.recipientLabel}
+        icon={<UserFocus size={16} weight="bold" />}
+      >
         <Field label="Nama">
           <Input
             value={data.client.name}
@@ -154,7 +163,10 @@ export default function Editor({ data, update }: Props) {
       </Section>
 
       {/* Meta */}
-      <Section title="Detail Dokumen" icon={<Notepad size={16} weight="bold" />}>
+      <Section
+        title="Detail Dokumen"
+        icon={<Notepad size={16} weight="bold" />}
+      >
         <div className="grid grid-cols-2 gap-3">
           <Field label="Nomor">
             <Input
@@ -182,7 +194,10 @@ export default function Editor({ data, update }: Props) {
       </Section>
 
       {/* Items */}
-      <Section title="Produk / Jasa" icon={<ListNumbers size={16} weight="bold" />}>
+      <Section
+        title="Produk / Jasa"
+        icon={<ListNumbers size={16} weight="bold" />}
+      >
         <ItemsTable
           items={data.items}
           showAmounts={cfg.showAmounts}
@@ -242,7 +257,10 @@ export default function Editor({ data, update }: Props) {
       </Section>
 
       {/* Notes & terms */}
-      <Section title="Catatan & Ketentuan" icon={<Notepad size={16} weight="bold" />}>
+      <Section
+        title="Catatan & Ketentuan"
+        icon={<Notepad size={16} weight="bold" />}
+      >
         <Field label="Catatan">
           <TextArea
             rows={2}
@@ -260,7 +278,10 @@ export default function Editor({ data, update }: Props) {
       </Section>
 
       {/* Signature */}
-      <Section title="Tanda Tangan" icon={<SignatureIcon size={16} weight="bold" />}>
+      <Section
+        title="Tanda Tangan"
+        icon={<SignatureIcon size={16} weight="bold" />}
+      >
         <SignaturePad
           signature={data.signature}
           onChange={(patch) =>
@@ -269,5 +290,5 @@ export default function Editor({ data, update }: Props) {
         />
       </Section>
     </div>
-  )
+  );
 }

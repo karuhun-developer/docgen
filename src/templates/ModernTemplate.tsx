@@ -1,15 +1,15 @@
-import { DOC_TYPES } from '../types'
-import { computeTotals, lineTotal } from '../lib/calc'
-import { formatDate, formatRupiah, terbilang } from '../lib/format'
-import { PartyBlock, SignatureBlock, type TemplateProps } from './shared'
+import { DOC_TYPES } from "../types";
+import { computeTotals, lineTotal } from "../lib/calc";
+import { formatDate, formatRupiah, terbilang } from "../lib/format";
+import { PartyBlock, SignatureBlock, type TemplateProps } from "./shared";
 
-const NAVY = '#1E3A5F'
-const GREEN = '#059669'
+const NAVY = "#1E3A5F";
+const GREEN = "#059669";
 
 export default function ModernTemplate({ data }: TemplateProps) {
-  const cfg = DOC_TYPES[data.docType]
-  const totals = computeTotals(data)
-  const showAmounts = cfg.showAmounts
+  const cfg = DOC_TYPES[data.docType];
+  const totals = computeTotals(data);
+  const showAmounts = cfg.showAmounts;
 
   return (
     <div className="doc-page flex flex-col font-body shadow-card">
@@ -40,12 +40,13 @@ export default function ModernTemplate({ data }: TemplateProps) {
         <div className="text-right">
           <div
             className="font-heading text-2xl font-bold tracking-wide"
-            style={{ color: '#fff' }}
+            style={{ color: "#fff" }}
           >
             {cfg.title}
           </div>
           <div className="mt-2 text-[11px] text-white/80">
-            No. <span className="font-semibold text-white">{data.docNumber}</span>
+            No.{" "}
+            <span className="font-semibold text-white">{data.docNumber}</span>
           </div>
           <div className="text-[11px] text-white/80">
             {formatDate(data.date)}
@@ -108,7 +109,7 @@ export default function ModernTemplate({ data }: TemplateProps) {
               <tr key={it.id} className="border-b border-slate-100">
                 <td className="px-3 py-2.5 text-slate-400">{i + 1}</td>
                 <td className="px-3 py-2.5 font-medium text-slate-700">
-                  {it.description || '-'}
+                  {it.description || "-"}
                 </td>
                 <td className="px-3 py-2.5 text-center">{it.qty}</td>
                 <td className="px-3 py-2.5 text-center text-slate-500">
@@ -133,7 +134,10 @@ export default function ModernTemplate({ data }: TemplateProps) {
         {showAmounts && (
           <div className="mt-5 flex justify-end">
             <div className="w-64 space-y-1.5 text-[12px]">
-              <TotalRow label="Subtotal" value={formatRupiah(totals.subtotal)} />
+              <TotalRow
+                label="Subtotal"
+                value={formatRupiah(totals.subtotal)}
+              />
               {data.showDiscount && totals.discount > 0 && (
                 <TotalRow
                   label="Diskon"
@@ -161,7 +165,8 @@ export default function ModernTemplate({ data }: TemplateProps) {
 
         {showAmounts && (
           <div className="mt-3 rounded-md bg-slate-50 px-3 py-2 text-[11px] italic text-slate-500">
-            Terbilang: <span className="font-medium">{terbilang(totals.total)}</span>
+            Terbilang:{" "}
+            <span className="font-medium">{terbilang(totals.total)}</span>
           </div>
         )}
 
@@ -193,7 +198,7 @@ export default function ModernTemplate({ data }: TemplateProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function Row({ label, value }: { label: string; value: string }) {
@@ -202,7 +207,7 @@ function Row({ label, value }: { label: string; value: string }) {
       <span className="text-slate-400">{label}</span>
       <span className="font-medium text-slate-700">{value}</span>
     </div>
-  )
+  );
 }
 
 function TotalRow({ label, value }: { label: string; value: string }) {
@@ -211,5 +216,5 @@ function TotalRow({ label, value }: { label: string; value: string }) {
       <span>{label}</span>
       <span className="font-medium">{value}</span>
     </div>
-  )
+  );
 }
