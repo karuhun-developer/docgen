@@ -2,11 +2,156 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>docgen — Generator Quotation, Invoice & Dokumen</title>
+
+    <!-- Primary meta -->
+    <title>docgen — Generator Quotation, Invoice & Dokumen Gratis</title>
+    <meta
+      name="description"
+      content="Bikin Quotation, Invoice, Kwitansi, Surat Jalan & Purchase Order online — gratis, open source, tanpa daftar. 100% jalan di browser, data tersimpan aman di perangkat Anda."
+    />
+    <meta
+      name="keywords"
+      content="bikin invoice online, buat quotation, invoice generator, quotation maker, kwitansi online, surat jalan, purchase order, dokumen bisnis, faktur, gratis, open source, opensource, aplikasi invoice open source"
+    />
+    <meta name="author" content="Karuhun Developer" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#1E3A5F" />
+    <link rel="canonical" href="https://docgen.karuhundeveloper.com/" />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/icons/512x512.png" />
+    <link rel="icon" type="image/png" sizes="150x150" href="/icons/favicon.png" />
+    <link rel="apple-touch-icon" href="/icons/180x180.png" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="docgen" />
+    <meta name="application-name" content="docgen" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="docgen" />
+    <meta property="og:title" content="docgen — Generator Quotation, Invoice & Dokumen Gratis" />
+    <meta
+      property="og:description"
+      content="Bikin Quotation, Invoice, Kwitansi, Surat Jalan & Purchase Order online — gratis, open source, tanpa daftar. 100% jalan di browser, data tersimpan aman di perangkat Anda."
+    />
+    <meta property="og:url" content="https://docgen.karuhundeveloper.com/" />
+    <meta property="og:image" content="https://docgen.karuhundeveloper.com/og-banner.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="docgen — generator Quotation, Invoice & dokumen bisnis gratis" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:locale:alternate" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="docgen — Generator Quotation, Invoice & Dokumen Gratis" />
+    <meta
+      name="twitter:description"
+      content="Bikin Quotation, Invoice, Kwitansi, Surat Jalan & Purchase Order online — gratis, open source, tanpa daftar. Data aman tersimpan di perangkat Anda."
+    />
+    <meta name="twitter:image" content="https://docgen.karuhundeveloper.com/og-banner.jpg" />
+    <meta name="twitter:image:alt" content="docgen — generator Quotation, Invoice & dokumen bisnis gratis" />
+
+    <!-- Structured data: WebApplication -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "docgen",
+        "url": "https://docgen.karuhundeveloper.com/",
+        "description": "Aplikasi web gratis & open source untuk membuat dokumen bisnis: Quotation, Invoice, Kwitansi, Surat Jalan, dan Purchase Order. 100% berjalan di browser, tanpa daftar, data tersimpan lokal.",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "inLanguage": "id-ID",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "IDR"
+        },
+        "featureList": [
+          "Quotation / Penawaran Harga",
+          "Invoice / Faktur",
+          "Kwitansi",
+          "Surat Jalan",
+          "Purchase Order",
+          "3 template: Modern, Classic, Minimal",
+          "Export PDF & cetak",
+          "Format Rupiah + terbilang otomatis",
+          "Data tersimpan lokal di browser"
+        ],
+        "author": {
+          "@type": "Organization",
+          "name": "Karuhun Developer",
+          "url": "https://karuhundeveloper.com/"
+        }
+      }
+    </script>
+
+    <!-- Structured data: FAQPage -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Apakah docgen gratis?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ya, docgen 100% gratis dan open source. Anda bisa membuat Quotation, Invoice, Kwitansi, Surat Jalan, dan Purchase Order tanpa biaya."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Apakah perlu mendaftar untuk memakai docgen?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Tidak. docgen langsung bisa dipakai di browser tanpa registrasi atau login."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Apakah data saya aman?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Aman. docgen berjalan 100% lokal di browser Anda. Data isian tersimpan di perangkat Anda (localStorage) dan tidak dikirim ke server mana pun."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Jenis dokumen apa saja yang bisa dibuat?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ada 5 jenis dokumen: Quotation (Penawaran Harga), Invoice (Faktur), Kwitansi, Surat Jalan, dan Purchase Order — dengan 3 pilihan template."
+            }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
+    <noscript>
+      <h1>docgen — Generator Quotation, Invoice &amp; Dokumen Bisnis Gratis</h1>
+      <p>
+        docgen adalah aplikasi web gratis dan open source untuk membuat dokumen
+        bisnis: <strong>Quotation</strong> (Penawaran Harga),
+        <strong>Invoice</strong> (Faktur), <strong>Kwitansi</strong>,
+        <strong>Surat Jalan</strong>, dan <strong>Purchase Order</strong>.
+        Tersedia 3 template (Modern, Classic, Minimal), format Rupiah + terbilang
+        otomatis, dan export PDF. Aplikasi berjalan 100% di browser Anda tanpa
+        perlu mendaftar — data tersimpan aman di perangkat Anda.
+      </p>
+      <p>Aktifkan JavaScript pada browser Anda untuk menggunakan docgen.</p>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

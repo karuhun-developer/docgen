@@ -2,6 +2,7 @@
   "name": "docgen",
   "private": true,
   "version": "0.0.0",
+  "description": "Generator dokumen bisnis gratis & open source: Quotation, Invoice, Kwitansi, Surat Jalan & Purchase Order. 100% lokal di browser.",
   "type": "module",
   "scripts": {
     "dev": "vite",

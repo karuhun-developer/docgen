@@ -1,0 +1,33 @@
+{
+  "name": "docgen — Generator Quotation, Invoice & Dokumen",
+  "short_name": "docgen",
+  "description": "Bikin Quotation, Invoice, Kwitansi, Surat Jalan & Purchase Order — gratis, open source, tanpa daftar.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1E3A5F",
+  "lang": "id",
+  "dir": "ltr",
+  "categories": ["business", "productivity", "finance"],
+  "icons": [
+    {
+      "src": "/icons/512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/180x180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
