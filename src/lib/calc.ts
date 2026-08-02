@@ -1,7 +1,24 @@
-import type { DocumentData, LineItem } from "../types";
+import type { DocType, DocumentData, LineItem, PayrollData } from "../types";
+
+/** True for the salary invoice, which uses payroll fields instead of items. */
+export function isPayroll(docType: DocType): boolean {
+  return docType === "invoice-gaji";
+}
 
 export function lineTotal(item: LineItem): number {
   return (Number(item.qty) || 0) * (Number(item.price) || 0);
+}
+
+export interface PayrollTotals {
+  total: number; // sum of every line amount
+}
+
+export function computePayroll(p: PayrollData): PayrollTotals {
+  const total = (p.lines ?? []).reduce(
+    (sum, l) => sum + (Number(l.amount) || 0),
+    0,
+  );
+  return { total };
 }
 
 export interface Totals {

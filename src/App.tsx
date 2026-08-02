@@ -18,7 +18,13 @@ import {
 } from "@phosphor-icons/react";
 import type { DocumentData, DocStatus, SavedDocument } from "./types";
 import { DOC_TYPES } from "./types";
-import { loadData, saveData, clearData, defaultData } from "./lib/storage";
+import {
+  loadData,
+  saveData,
+  clearData,
+  defaultData,
+  withDataDefaults,
+} from "./lib/storage";
 import { downloadPdf } from "./lib/pdf";
 import { printNode } from "./lib/print";
 import { useAuth } from "./lib/auth";
@@ -104,8 +110,7 @@ export default function App() {
   function openDoc(doc: SavedDocument) {
     // Older docs kept the name only in the `title` column, not inside the jsonb.
     setData({
-      ...defaultData(),
-      ...doc.data,
+      ...withDataDefaults(doc.data),
       title: doc.data.title ?? doc.title ?? "",
     });
     setCurrentDocId(doc.id);
@@ -115,7 +120,7 @@ export default function App() {
   }
 
   function newFromTemplate(tplData: DocumentData, name: string) {
-    setData({ ...defaultData(), ...tplData, title: "" });
+    setData({ ...withDataDefaults(tplData), title: "" });
     setCurrentDocId(null);
     setCurrentStatus(null);
     setTab("edit");

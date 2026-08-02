@@ -1,4 +1,4 @@
-import type { DocumentData, LineItem } from "../types";
+import type { DocumentData, LineItem, PayrollLine } from "../types";
 
 const STORAGE_KEY = "docgen:document:v1";
 
@@ -8,6 +8,10 @@ export function uid(): string {
 
 export function emptyItem(): LineItem {
   return { id: uid(), description: "", qty: 1, unit: "pcs", price: 0 };
+}
+
+export function emptyPayrollLine(): PayrollLine {
+  return { id: uid(), label: "", note: "", amount: 0 };
 }
 
 export function defaultData(): DocumentData {
@@ -52,7 +56,41 @@ export function defaultData(): DocumentData {
       label: "Nama Penandatangan",
       place: "Jakarta",
     },
+    payroll: {
+      period: "Juli 2026",
+      employeeId: "K001",
+      position: "Sales",
+      lines: [
+        { id: uid(), label: "Gaji Pokok", note: "22 hari × Rp 35.000", amount: 770000 },
+        { id: uid(), label: "Bonus", note: "", amount: 30000 },
+        { id: uid(), label: "Potongan", note: "", amount: 0 },
+      ],
+      paid: false,
+    },
     currency: "IDR",
+  };
+}
+
+/**
+ * Merge a stored/partial document onto fresh defaults so older or partial data
+ * never breaks the app. Nested objects that gained new fields (notably `payroll`,
+ * which older docs lack entirely or store in an outdated shape) are merged too,
+ * guaranteeing `payroll.lines` is always a non-empty array.
+ */
+export function withDataDefaults(partial: Partial<DocumentData>): DocumentData {
+  const base = defaultData();
+  const p = partial.payroll;
+  return {
+    ...base,
+    ...partial,
+    company: { ...base.company, ...partial.company },
+    client: { ...base.client, ...partial.client },
+    signature: { ...base.signature, ...partial.signature },
+    payroll: {
+      ...base.payroll,
+      ...p,
+      lines: p?.lines?.length ? p.lines : base.payroll.lines,
+    },
   };
 }
 
@@ -60,9 +98,7 @@ export function loadData(): DocumentData {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return defaultData();
-    const parsed = JSON.parse(raw);
-    // Shallow-merge onto defaults so new fields never break older saved data
-    return { ...defaultData(), ...parsed };
+    return withDataDefaults(JSON.parse(raw));
   } catch {
     return defaultData();
   }

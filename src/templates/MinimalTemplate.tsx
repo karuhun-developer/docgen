@@ -1,7 +1,7 @@
 import { DOC_TYPES } from "../types";
-import { computeTotals, lineTotal } from "../lib/calc";
+import { computeTotals, isPayroll, lineTotal } from "../lib/calc";
 import { formatDate, formatRupiah, terbilang } from "../lib/format";
-import { SignatureBlock, type TemplateProps } from "./shared";
+import { PayrollBody, SignatureBlock, type TemplateProps } from "./shared";
 
 const GREEN = "#059669";
 
@@ -10,6 +10,7 @@ export default function MinimalTemplate({ data }: TemplateProps) {
   const cfg = DOC_TYPES[data.docType];
   const totals = computeTotals(data);
   const showAmounts = cfg.showAmounts;
+  const payroll = isPayroll(data.docType);
 
   return (
     <div className="doc-page flex flex-col px-14 py-14 font-body text-slate-800 shadow-card">
@@ -39,6 +40,10 @@ export default function MinimalTemplate({ data }: TemplateProps) {
 
       <div className="mt-2 h-px w-full bg-slate-200" />
 
+      {payroll ? (
+        <PayrollBody data={data} accent={GREEN} />
+      ) : (
+        <>
       {/* Parties */}
       <div className="mt-8 grid grid-cols-2 gap-8 text-[12px]">
         <div>
@@ -149,6 +154,9 @@ export default function MinimalTemplate({ data }: TemplateProps) {
         <div className="mt-3 text-right text-[11px] italic text-slate-400">
           {terbilang(totals.total)}
         </div>
+      )}
+
+        </>
       )}
 
       {/* Footer */}

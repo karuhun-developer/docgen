@@ -3,13 +3,24 @@ import {
   UserFocus,
   Notepad,
   ListNumbers,
+  Money,
+  Plus,
+  Trash,
   Signature as SignatureIcon,
   FileText,
   Palette,
 } from "@phosphor-icons/react";
-import type { DocType, DocumentData, Party, TemplateId } from "../../types";
+import type {
+  DocType,
+  DocumentData,
+  PayrollData,
+  PayrollLine,
+  Party,
+  TemplateId,
+} from "../../types";
 import { DOC_TYPES, TEMPLATES } from "../../types";
-import { computeTotals } from "../../lib/calc";
+import { computePayroll, computeTotals, isPayroll } from "../../lib/calc";
+import { emptyPayrollLine } from "../../lib/storage";
 import { formatRupiah } from "../../lib/format";
 import { Field, Input, Section, Select, TextArea } from "../ui";
 import ImageUpload from "./ImageUpload";
@@ -24,12 +35,29 @@ interface Props {
 export default function Editor({ data, update }: Props) {
   const cfg = DOC_TYPES[data.docType];
   const totals = computeTotals(data);
+  const payroll = isPayroll(data.docType);
 
   function patchCompany(patch: Partial<DocumentData["company"]>) {
     update({ company: { ...data.company, ...patch } });
   }
   function patchClient(patch: Partial<Party>) {
     update({ client: { ...data.client, ...patch } });
+  }
+  function patchPayroll(patch: Partial<PayrollData>) {
+    update({ payroll: { ...data.payroll, ...patch } });
+  }
+  function patchPayrollLine(id: string, patch: Partial<PayrollLine>) {
+    patchPayroll({
+      lines: data.payroll.lines.map((l) =>
+        l.id === id ? { ...l, ...patch } : l,
+      ),
+    });
+  }
+  function removePayrollLine(id: string) {
+    patchPayroll({ lines: data.payroll.lines.filter((l) => l.id !== id) });
+  }
+  function addPayrollLine() {
+    patchPayroll({ lines: [...data.payroll.lines, emptyPayrollLine()] });
   }
 
   return (
@@ -139,27 +167,31 @@ export default function Editor({ data, update }: Props) {
             onChange={(e) => patchClient({ name: e.target.value })}
           />
         </Field>
-        <Field label="Alamat">
-          <TextArea
-            rows={2}
-            value={data.client.address}
-            onChange={(e) => patchClient({ address: e.target.value })}
-          />
-        </Field>
-        <div className="grid grid-cols-2 gap-3">
-          <Field label="Telepon">
-            <Input
-              value={data.client.phone}
-              onChange={(e) => patchClient({ phone: e.target.value })}
-            />
-          </Field>
-          <Field label="Email">
-            <Input
-              value={data.client.email}
-              onChange={(e) => patchClient({ email: e.target.value })}
-            />
-          </Field>
-        </div>
+        {!payroll && (
+          <>
+            <Field label="Alamat">
+              <TextArea
+                rows={2}
+                value={data.client.address}
+                onChange={(e) => patchClient({ address: e.target.value })}
+              />
+            </Field>
+            <div className="grid grid-cols-2 gap-3">
+              <Field label="Telepon">
+                <Input
+                  value={data.client.phone}
+                  onChange={(e) => patchClient({ phone: e.target.value })}
+                />
+              </Field>
+              <Field label="Email">
+                <Input
+                  value={data.client.email}
+                  onChange={(e) => patchClient({ email: e.target.value })}
+                />
+              </Field>
+            </div>
+          </>
+        )}
       </Section>
 
       {/* Meta */}
@@ -193,7 +225,134 @@ export default function Editor({ data, update }: Props) {
         )}
       </Section>
 
+      {/* Payroll — salary invoice only */}
+      {payroll && (
+        <Section title="Data Gaji" icon={<Money size={16} weight="bold" />}>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Periode">
+              <Input
+                value={data.payroll.period}
+                onChange={(e) => patchPayroll({ period: e.target.value })}
+                placeholder="Juli 2026"
+              />
+            </Field>
+            <Field label="ID Karyawan">
+              <Input
+                value={data.payroll.employeeId}
+                onChange={(e) => patchPayroll({ employeeId: e.target.value })}
+                placeholder="K001"
+              />
+            </Field>
+          </div>
+          <Field label="Jabatan">
+            <Input
+              value={data.payroll.position}
+              onChange={(e) => patchPayroll({ position: e.target.value })}
+              placeholder="Sales"
+            />
+          </Field>
+          {/* Dynamic breakdown rows (Keterangan | deskripsi | Jumlah) */}
+          <div>
+            <span className="mb-1 block text-xs font-semibold text-slate-500">
+              Rincian
+            </span>
+            <div className="space-y-3">
+              {(data.payroll.lines ?? []).map((l, idx) => (
+                <div
+                  key={l.id}
+                  className="rounded-lg border border-border bg-muted/40 p-3"
+                >
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-xs font-semibold text-slate-500">
+                      Baris #{idx + 1}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removePayrollLine(l.id)}
+                      disabled={data.payroll.lines.length === 1}
+                      className="inline-flex cursor-pointer items-center gap-1 rounded px-1.5 py-1 text-xs text-destructive transition-colors duration-200 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40"
+                      aria-label="Hapus baris"
+                    >
+                      <Trash size={14} weight="bold" />
+                    </button>
+                  </div>
+
+                  <Input
+                    placeholder="Keterangan (mis. Gaji Pokok)"
+                    value={l.label}
+                    onChange={(e) =>
+                      patchPayrollLine(l.id, { label: e.target.value })
+                    }
+                    className="mb-2"
+                  />
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="mb-1 block text-[10px] font-semibold text-slate-400">
+                        Deskripsi (opsional)
+                      </label>
+                      <Input
+                        placeholder="22 hari hadir"
+                        value={l.note}
+                        onChange={(e) =>
+                          patchPayrollLine(l.id, { note: e.target.value })
+                        }
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-[10px] font-semibold text-slate-400">
+                        Jumlah (Rp)
+                      </label>
+                      <Input
+                        type="number"
+                        value={l.amount}
+                        onChange={(e) =>
+                          patchPayrollLine(l.id, {
+                            amount: Number(e.target.value),
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              <button
+                type="button"
+                onClick={addPayrollLine}
+                className="inline-flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-dashed border-primary/40 py-2 text-sm font-medium text-primary transition-colors duration-200 hover:bg-primary/5"
+              >
+                <Plus size={16} weight="bold" /> Tambah Baris
+              </button>
+            </div>
+          </div>
+
+          <p className="text-[11px] text-slate-400">
+            Untuk potongan, isi Jumlah dengan angka negatif (mis. -50000).
+          </p>
+
+          <Field label="Status Pembayaran">
+            <Select
+              value={data.payroll.paid ? "paid" : "unpaid"}
+              onChange={(e) =>
+                patchPayroll({ paid: e.target.value === "paid" })
+              }
+            >
+              <option value="unpaid">Belum Dibayar</option>
+              <option value="paid">Dibayar</option>
+            </Select>
+          </Field>
+          <div className="flex items-center justify-between border-t border-border pt-3 text-sm">
+            <span className="font-semibold text-foreground">Total Gaji</span>
+            <span className="text-base font-bold text-primary">
+              {formatRupiah(computePayroll(data.payroll).total)}
+            </span>
+          </div>
+        </Section>
+      )}
+
       {/* Items */}
+      {!payroll && (
       <Section
         title="Produk / Jasa"
         icon={<ListNumbers size={16} weight="bold" />}
@@ -255,6 +414,7 @@ export default function Editor({ data, update }: Props) {
           </div>
         )}
       </Section>
+      )}
 
       {/* Notes & terms */}
       <Section

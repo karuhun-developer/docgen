@@ -1,7 +1,12 @@
 import { DOC_TYPES } from "../types";
-import { computeTotals, lineTotal } from "../lib/calc";
+import { computeTotals, isPayroll, lineTotal } from "../lib/calc";
 import { formatDate, formatRupiah, terbilang } from "../lib/format";
-import { PartyBlock, SignatureBlock, type TemplateProps } from "./shared";
+import {
+  PartyBlock,
+  PayrollBody,
+  SignatureBlock,
+  type TemplateProps,
+} from "./shared";
 
 const NAVY = "#1E3A5F";
 const GREEN = "#059669";
@@ -10,6 +15,7 @@ export default function ModernTemplate({ data }: TemplateProps) {
   const cfg = DOC_TYPES[data.docType];
   const totals = computeTotals(data);
   const showAmounts = cfg.showAmounts;
+  const payroll = isPayroll(data.docType);
 
   return (
     <div className="doc-page flex flex-col font-body shadow-card">
@@ -55,6 +61,10 @@ export default function ModernTemplate({ data }: TemplateProps) {
       </header>
 
       <div className="flex flex-1 flex-col px-10 py-8">
+        {payroll ? (
+          <PayrollBody data={data} accent={NAVY} />
+        ) : (
+          <>
         {/* Parties + meta */}
         <div className="flex items-start justify-between gap-8">
           <div>
@@ -168,6 +178,9 @@ export default function ModernTemplate({ data }: TemplateProps) {
             Terbilang:{" "}
             <span className="font-medium">{terbilang(totals.total)}</span>
           </div>
+        )}
+
+          </>
         )}
 
         {/* Notes + signature */}

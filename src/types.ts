@@ -3,6 +3,7 @@
 export type DocType =
   | "quotation"
   | "invoice"
+  | "invoice-gaji"
   | "kwitansi"
   | "surat-jalan"
   | "purchase-order";
@@ -34,6 +35,23 @@ export interface Signature {
   place: string;
 }
 
+/** One editable row of the salary breakdown (Keterangan | Jumlah). */
+export interface PayrollLine {
+  id: string;
+  label: string; // Keterangan, e.g. "Gaji Pokok"
+  note: string; // optional description, e.g. "22 hari hadir"
+  amount: number; // Jumlah (IDR); negative for deductions (potongan)
+}
+
+/** Salary-invoice specifics. Only meaningful when docType === "invoice-gaji". */
+export interface PayrollData {
+  period: string; // free text, e.g. "Juli 2026"
+  employeeId: string; // e.g. "K001"
+  position: string; // jabatan, e.g. "Sales"
+  lines: PayrollLine[]; // dynamic breakdown rows; total = sum of amounts
+  paid: boolean; // status pembayaran: true = Dibayar
+}
+
 export interface DocumentData {
   docType: DocType;
   /** User-facing document name for listings; empty => derived from type + client. */
@@ -52,6 +70,8 @@ export interface DocumentData {
   notes: string;
   terms: string;
   signature: Signature;
+  /** Salary-invoice fields; ignored for every docType except "invoice-gaji". */
+  payroll: PayrollData;
   currency: "IDR";
 }
 
@@ -89,6 +109,16 @@ export const DOC_TYPES: Record<DocType, DocTypeConfig> = {
     showAmounts: true,
     showDueDate: true,
     dueDateLabel: "Jatuh Tempo",
+    numberPrefix: "INV",
+  },
+  "invoice-gaji": {
+    title: "INVOICE GAJI KARYAWAN",
+    label: "Invoice Gaji Karyawan",
+    recipientLabel: "Karyawan",
+    // Uses its own salary breakdown instead of the generic items/tax/discount block.
+    showAmounts: false,
+    showDueDate: false,
+    dueDateLabel: "",
     numberPrefix: "INV",
   },
   kwitansi: {

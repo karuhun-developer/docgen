@@ -1,13 +1,14 @@
 import { DOC_TYPES } from "../types";
-import { computeTotals, lineTotal } from "../lib/calc";
+import { computeTotals, isPayroll, lineTotal } from "../lib/calc";
 import { formatDate, formatRupiah, terbilang } from "../lib/format";
-import { SignatureBlock, type TemplateProps } from "./shared";
+import { PayrollBody, SignatureBlock, type TemplateProps } from "./shared";
 
 // Classic: formal, serif-like structure with strong rules — good for PO / Kwitansi
 export default function ClassicTemplate({ data }: TemplateProps) {
   const cfg = DOC_TYPES[data.docType];
   const totals = computeTotals(data);
   const showAmounts = cfg.showAmounts;
+  const payroll = isPayroll(data.docType);
 
   return (
     <div className="doc-page flex flex-col px-12 py-10 font-body text-slate-800 shadow-card">
@@ -47,6 +48,10 @@ export default function ClassicTemplate({ data }: TemplateProps) {
         </div>
       </div>
 
+      {payroll ? (
+        <PayrollBody data={data} accent="#1e293b" />
+      ) : (
+        <>
       {/* Meta / recipient */}
       <div className="mt-6 flex justify-between text-[12px]">
         <div className="max-w-[280px]">
@@ -160,6 +165,9 @@ export default function ClassicTemplate({ data }: TemplateProps) {
         <div className="mt-2 text-[11px] italic text-slate-500">
           Terbilang: {terbilang(totals.total)}
         </div>
+      )}
+
+        </>
       )}
 
       {/* Footer */}
