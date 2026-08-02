@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import type { Session } from '@supabase/supabase-js'
-import { authClient, SUPABASE_URL } from './db'
-import { requireAuth, type AuthEnv } from './middleware'
+import { authClient, SUPABASE_URL } from './db.js'
+import { requireAuth, type AuthEnv } from './middleware.js'
 
 export const auth = new Hono<AuthEnv>()
 

@@ -1,8 +1,8 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { auth } from './auth'
-import { documents } from './documents'
-import { templates } from './templates'
+import { auth } from './auth.js'
+import { documents } from './documents.js'
+import { templates } from './templates.js'
 
 const app = new Hono().basePath('/api')
 

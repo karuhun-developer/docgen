@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
-import { admin } from './db'
-import { requireAuth, type AuthEnv } from './middleware'
+import { admin } from './db.js'
+import { requireAuth, type AuthEnv } from './middleware.js'
 
 export const templates = new Hono<AuthEnv>()
 
